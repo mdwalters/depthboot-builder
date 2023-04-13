@@ -175,9 +175,16 @@ if __name__ == "__main__":
     import cli_input
 
     # check if running the latest version fo the script
-    if not args.skip_commit_check and bash("git rev-parse HEAD") != bash("git ls-remote origin HEAD").split("\t")[0]:
-        print_error("You are not running the latest version of the script. Please update with 'git pull'")
-        print_status("If you are a developer, you can skip this with the '--skip-commit-check' flag")
+    try:
+        if not args.skip_commit_check and \
+                bash("git rev-parse HEAD") != bash("git ls-remote origin HEAD").split("\t")[0]:
+            print_error("You are not running the latest version of the script. Please update with 'git pull'")
+            print_status("If you are a developer, you can skip this with the '--skip-commit-check' flag")
+            sys.exit(1)
+    except subprocess.CalledProcessError:
+        print_error("Failed to check if script is up to date.")
+        print_status("If you are a developer, you can skip this with the '--skip-commit-check' flag. "
+                     "If you are not a developer, you are doing something wrong")
         sys.exit(1)
 
     # Check if running under crostini
