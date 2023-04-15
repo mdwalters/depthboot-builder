@@ -4,9 +4,8 @@ Choose between a variety of common Linux distributions and desktop environments 
 [supported](https://eupnea-linux.github.io/docs/project/supported-devices) 64-bit Chromebook, without modifying
 firmware.
 <h1><a href="https://eupnea-linux.github.io/docs/depthboot/requirements">Get started here</a></h1>
-[Due to licensing restraints, Depthboot cannot be distributed as an iso](https://eupnea-linux.github.io/faq#why-is-sharing-depthboot-images-illegal). Instead, it has to be built locally.
 
-You can alternatively use [EupneaOS](https://github.com/eupnea-linux/eupnea-os) which offers pre-built ISOs.
+[Due to licensing restraints Depthboot cannot be distributed as an iso](https://eupnea-linux.github.io/faq#why-is-sharing-depthboot-images-illegal). Instead, it has to be built locally.
 
 ## Depthboot vs Mainline
 
@@ -41,4 +40,4 @@ https://rvlt.gg/6YxHB2Cz
 
 ## Join our Discord server:
 
-[<img src="https://discordapp.com/api/guilds/994245999822381076/widget.png?style=banner2" alt="Discord banner"></img>](https://discord.gg/jxXb2PwzYz)
+[<img src="https://discordapp.com/api/guilds/994245999822381076/widget.png?style=banner2" alt="Discord banner"></img>](https://discord.gg/XwRHSUbSmu)
