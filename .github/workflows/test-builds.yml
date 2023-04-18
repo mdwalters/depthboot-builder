@@ -87,7 +87,7 @@ jobs:
   test-fedora:
     strategy:
       matrix:
-        version: [ "37", "38" ]
+        version: [ "38", "39" ]
         de_name: [ "gnome", "kde", "xfce", "lxqt", "deepin", "budgie", "cinnamon", "cli" ]
     runs-on: ubuntu-latest
     steps:

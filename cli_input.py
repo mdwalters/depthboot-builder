@@ -53,10 +53,10 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
             case "Fedora":
                 output_dict["distro_name"] = "fedora"
                 output_dict["distro_version"] = ia_selection("Which Fedora version would you like to use?",
-                                                             options=["37", "38"],
-                                                             flags=[f"~{os_sizes['fedora_37']['cli']}GB "
+                                                             options=["38", "39"],
+                                                             flags=[f"~{os_sizes['fedora_38']['cli']}GB "
                                                                     f"(stable, recommended)",
-                                                                    f"~{os_sizes['fedora_38']['cli']}GB"
+                                                                    f"~{os_sizes['fedora_39']['cli']}GB"
                                                                     " (beta, unrecommended)"])
                 break
             case "Pop!_OS":
