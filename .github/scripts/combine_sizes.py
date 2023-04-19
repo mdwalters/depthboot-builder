@@ -46,7 +46,7 @@ if __name__ == "__main__":
     # Calculate average sizes for distros with multiple versions
     all_sizes["ubuntu_average"] = round(
         (all_sizes["ubuntu_22.04"]["cli"] + all_sizes["ubuntu_22.10"]["cli"]) / 2, 1)
-    all_sizes["fedora_average"] = round((all_sizes["fedora_37"]["cli"] + all_sizes["fedora_38"]["cli"]) / 2, 1)
+    all_sizes["fedora_average"] = round((all_sizes["fedora_38"]["cli"] + all_sizes["fedora_39"]["cli"]) / 2, 1)
 
     with open("os_sizes.json", "w") as f:
         json.dump(all_sizes, f, indent=2, sort_keys=True)
