@@ -31,7 +31,7 @@ jobs:
           fetch-depth: 1
 
       - name: Installing dependencies
-        run: sudo apt-get install -y cgpt vboot-kernel-utils parted
+        run: sudo apt-get update && sudo apt-get install -y cgpt vboot-kernel-utils parted
 
       - name: Copy testing script to root
         run: cp ./.github/scripts/build-image.py ./build-image.py
@@ -68,7 +68,7 @@ jobs:
           fetch-depth: 1
 
       - name: Installing dependencies
-        run: sudo apt-get install -y cgpt vboot-kernel-utils parted
+        run: sudo apt-get update && sudo apt-get install -y cgpt vboot-kernel-utils parted
 
       - name: Copy testing script to root
         run: cp ./.github/scripts/build-image.py ./build-image.py
@@ -106,7 +106,7 @@ jobs:
           fetch-depth: 1
 
       - name: Installing dependencies
-        run: sudo apt-get install -y cgpt vboot-kernel-utils parted
+        run: sudo apt-get update && sudo apt-get install -y cgpt vboot-kernel-utils parted
 
       - name: Copy testing script to root
         run: cp ./.github/scripts/build-image.py ./build-image.py
@@ -131,7 +131,7 @@ jobs:
           fetch-depth: 1
 
       - name: Installing dependencies
-        run: sudo apt-get install -y cgpt vboot-kernel-utils parted
+        run: sudo apt-get update && sudo apt-get install -y cgpt vboot-kernel-utils parted
 
       - name: Copy testing script to root
         run: cp ./.github/scripts/build-image.py ./build-image.py
