@@ -271,6 +271,14 @@ def extract_rootfs(distro_name: str, distro_version: str) -> None:
                     file_path = os.path.join(dirpath, "filesystem.squashfs")
                     print(f"Found filesystem.squashfs at {file_path}")
                     break
+                elif "rootfs.sfs" in filenames:
+                    file_path = os.path.join(dirpath, "rootfs.sfs")
+                    print(f"Found rootfs.sfs at {file_path}")
+                    break
+                elif "image.squashfs" in filenames:
+                    file_path = os.path.join(dirpath, "image.squashfs")
+                    print(f"Found image.squashfs at {file_path}")
+                    break
             if not file_path:
                 print_error("Could not find squashfs in iso")
                 cpdir(prompt_user_for_rootfs(), "/mnt/depthboot")
