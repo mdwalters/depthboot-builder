@@ -251,7 +251,14 @@ def extract_rootfs(distro_name: str, distro_version: str) -> None:
             print_status("Mounting iso")
             iso_loop_dev = bash(f"losetup -fP --show {iso_path}")
             mkdir("/tmp/depthboot-build/iso-mount")
-            bash(f"mount {iso_loop_dev}p1 /tmp/depthboot-build/iso-mount -o ro")
+            # find the biggest partition
+            partitions_json = json.loads(bash(f"lsblk -nbJ {iso_loop_dev} -o SIZE"))["blockdevices"]
+            # remove first device as it's the total size
+            partitions_json.pop(0)
+            # find the index of the biggest partition
+            max_index = partitions_json.index(max(partitions_json, key=lambda x: x['size'])) + 1
+            print_status(f"Mounting biggest partition at {iso_loop_dev}p{max_index}")
+            bash(f"mount {iso_loop_dev}p{max_index} /tmp/depthboot-build/iso-mount -o ro")
             # search for rootfs
             print_status("Searching for squashfs")
             file_path = ""
