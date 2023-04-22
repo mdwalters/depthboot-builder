@@ -42,15 +42,15 @@
     "lxqt": 4.7,
     "xfce": 5.1
   },
-  "ubuntu_22.10": {
-    "budgie": 5.4,
-    "cinnamon": 7.0,
-    "cli": 3.7,
-    "deepin": 2.9,
-    "gnome": 5.7,
-    "kde": 5.3,
-    "lxqt": 6.6,
-    "xfce": 5.2
+  "ubuntu_23.04": {
+    "budgie": 0.0,
+    "cinnamon": 0.0,
+    "cli": 0.0,
+    "deepin": 0.0,
+    "gnome": 0.0,
+    "kde": 0.0,
+    "lxqt": 0.0,
+    "xfce": 0.0
   },
-  "ubuntu_average": 3.7
+  "ubuntu_average": 1.9
 }
