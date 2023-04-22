@@ -17,7 +17,8 @@ def process_args():
     parser = argparse.ArgumentParser()
     # action="store_true" makes the arg a flag and sets it to True if the argument is passed, without needing a value
     parser.add_argument('-p', dest="local_path",
-                        help="Use files from provided path before downloading from the internet")
+                        help="Use this option with the full path to the directory with files to be used by the script."
+                             " If a file is not found the script will attempt to download it.")
     parser.add_argument('--device', dest="device_override",
                         help="Specify device to direct write. Skips the device selection question.")
     parser.add_argument("--show-device-selection", dest="device_selection", action="store_true",
