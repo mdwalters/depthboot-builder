@@ -42,9 +42,9 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
             case "Ubuntu":
                 output_dict["distro_name"] = "ubuntu"
                 output_dict["distro_version"] = ia_selection("Which Ubuntu version would you like to use?",
-                                                             options=["22.04", "22.10"], flags=[
+                                                             options=["22.04", "23.04"], flags=[
                         f"{os_sizes['ubuntu_22.04']['cli']}GB (LTS version)",
-                        f"{os_sizes['ubuntu_22.10']['cli']}GB (latest)"])
+                        f"{os_sizes['ubuntu_23.04']['cli']}GB (latest)"])
                 break
             case "Arch":
                 output_dict["distro_name"] = "arch"

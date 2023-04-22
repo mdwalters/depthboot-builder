@@ -13,7 +13,8 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
         "20.04": "focal",
         "21.04": "hirsute",
         "22.04": "jammy",
-        "22.10": "kinetic"
+        "22.10": "kinetic",
+        "23.04": "lunar"
     }
     # add missing apt sources
     with open("/mnt/depthboot/etc/apt/sources.list", "a") as file:

@@ -12,7 +12,7 @@ jobs:
   test-ubuntu:
     strategy:
       matrix:
-        version: [ "22.04", "22.10" ]
+        version: [ "22.04", "23.04" ]
         de_name: [ "gnome", "kde", "xfce", "lxqt", "budgie", "deepin", "cinnamon", "cli" ]
     runs-on: ubuntu-latest
     steps:
