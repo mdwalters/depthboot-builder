@@ -497,20 +497,11 @@ def start_build(build_options: dict, args: argparse.Namespace) -> None:
                 break
 
         # copy distro rootfs
-        distro_rootfs = {
-            "ubuntu": [cpfile, "ubuntu-rootfs.tar.xz"],
-            "arch": [cpfile, "arch-rootfs.tar.gz"],
-            "fedora": [cpfile, "fedora-rootfs.tar.xz"],
-            "pop-os": [cpfile, "pop-os-rootfs.tar.xz"],
-            "generic": [cpfile, "generic-rootfs.tar.xz"],
-        }
         try:
-            distro_rootfs[build_options["distro_name"]][0](
-                f"{local_path_posix}{distro_rootfs[build_options['distro_name']][1]}",
-                f"/tmp/depthboot-build/{distro_rootfs[build_options['distro_name']][1]}")
+            cpfile(f"{local_path_posix}rootfs.tar.xz",
+                   f"/tmp/depthboot-build/{build_options['distro_name']}-rootfs.tar.xz")
         except FileNotFoundError:
-            print_warning(f"File {distro_rootfs[build_options['distro_name']][1]} not found in {args.local_path}, "
-                          f"attempting to download")
+            print_warning(f"File 'rootfs.tar.xz' not found in {args.local_path}. Attempting to download rootfs")
             download_rootfs(build_options["distro_name"], build_options["distro_version"])
 
     # Setup device
