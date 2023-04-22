@@ -238,7 +238,8 @@ def extract_rootfs(distro_name: str, distro_version: str) -> None:
             print_status("Starting generic rootfs extraction")
             # ask user for path to iso
             while True:
-                print_warning("You will need a full iso of the distro. Netboot (etc.) images will not work.")
+                print_warning(
+                    "You will need a full iso of the distro. Netboot, pure initrd, etc... images will not work.")
                 # user read for path autocompletion
                 iso_path = input("\033[92m" + "Enter full path to the ISO file:\n" + "\033[0m")
                 if not path_exists(iso_path) or not iso_path.endswith(".iso"):
