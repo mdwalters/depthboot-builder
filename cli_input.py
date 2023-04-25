@@ -32,12 +32,15 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
 
     while True:
         distro_name = ia_selection("Which Linux distribution (flavor) would you like to use?",
-                                   options=["Fedora", "Ubuntu", "Pop!_OS", "Arch", "Generic ISO"],
+                                   options=["Fedora", "Ubuntu", "Pop!_OS", "Linux Mint (Cinnamon edition)", "Arch",
+                                            "Generic ISO"],
                                    flags=[f"~{os_sizes['fedora_average']}GB (recommended)",
                                           f"~{os_sizes['ubuntu_average']}GB",
                                           f"{os_sizes['pop-os_22.04']['cosmic-gnome']}GB",
+                                          f"{os_sizes['ubuntu_22.04']['cinnamon']}GB",
                                           f"{os_sizes['arch_latest']['cli']}GB",
                                           "(NOT recommended)"])
+        skip_de_selection = False
         match distro_name:
             case "Ubuntu":
                 output_dict["distro_name"] = "ubuntu"
@@ -45,6 +48,13 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
                                                              options=["22.04", "23.04"], flags=[
                         f"{os_sizes['ubuntu_22.04']['cli']}GB (LTS version)",
                         f"{os_sizes['ubuntu_23.04']['cli']}GB (latest)"])
+                break
+            case "Linux Mint (Cinnamon edition)":
+                output_dict["distro_name"] = "ubuntu"
+                output_dict["distro_version"] = "22.04"
+                output_dict["de_name"] = "cinnamon"
+                print_warning("Installing Ubuntu 22.04 with Cinnamon DE")
+                skip_de_selection = True
                 break
             case "Arch":
                 output_dict["distro_name"] = "arch"
@@ -95,7 +105,7 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
 
     temp_distro_name = f'{output_dict["distro_name"]}_{output_dict["distro_version"]}'
 
-    if output_dict["distro_name"] not in ["pop-os", "generic"]:
+    if output_dict["distro_name"] not in ["pop-os", "generic"] and not skip_de_selection:
         de_list = ["Gnome", "KDE", "Xfce", "LXQt", "Cinnamon"]
         flags_list = [f"(recommended) +{os_sizes[temp_distro_name]['gnome']}GB",
                       f"(recommended) +{os_sizes[temp_distro_name]['kde']}GB",
