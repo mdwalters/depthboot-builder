@@ -170,8 +170,7 @@ def partition_and_flash_kernel(mnt_point: str, write_usb: bool, distro_name: str
     print_status(f"Rootfs partition UUID: {rootfs_partuuid}")
 
     # write PARTUUID to kernel flags and save it as a file
-    base_string = "console= root=PARTUUID=insert_partuuid i915.modeset=1 rootwait rw mem_sleep_default=deep " \
-                  "fbcon=logo-pos:center,logo-count:1"
+    base_string = "console= root=PARTUUID=insert_partuuid i915.modeset=1 rootwait rw fbcon=logo-pos:center,logo-count:1"
     if distro_name in {"pop-os", "ubuntu"}:
         base_string += ' security=apparmor'
     if distro_name == 'fedora':
