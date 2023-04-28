@@ -526,7 +526,7 @@ def start_build(build_options: dict, args: argparse.Namespace) -> None:
         case _:
             print_status("Generic install, skipping distro specific configuration")
     with contextlib.suppress(UnboundLocalError):
-        distro.config(build_options["de_name"], build_options["distro_version"], verbose, build_options["kernel_type"])
+        distro.config(build_options["de_name"], build_options["distro_version"], args.verbose, build_options["kernel_type"])
 
     post_config(build_options["de_name"], build_options["distro_name"])
 
