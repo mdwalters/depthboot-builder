@@ -6,7 +6,7 @@
     "gnome": 5.4,
     "kde": 5.2,
     "lxqt": 4.5,
-    "xfce": 4.1
+    "xfce": 4.3
   },
   "fedora_38": {
     "budgie": 2.5,
@@ -14,8 +14,8 @@
     "cli": 2.0,
     "deepin": 5.5,
     "gnome": 6.7,
-    "kde": 6.1,
-    "lxqt": 5.4,
+    "kde": 6.2,
+    "lxqt": 5.5,
     "xfce": 4.8
   },
   "fedora_39": {
