@@ -53,9 +53,12 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
                 output_dict["distro_name"] = "ubuntu"
                 output_dict["distro_version"] = "22.04"
                 output_dict["de_name"] = "cinnamon"
-                print_warning("Installing Ubuntu 22.04 with Cinnamon DE")
-                skip_de_selection = True
-                break
+                print_question("This option does *NOT* actually install Linux Mint. Instead it will install Ubuntu "
+                               "22.04 (which is what Linux Mint is based on) with the Cinnamon desktop environment.")
+                user_selection = ia_selection("Are you sure you want to continue?", options=["No", "Yes"], )
+                if user_selection == "Yes":
+                    skip_de_selection = True
+                    break
             case "Arch":
                 output_dict["distro_name"] = "arch"
                 output_dict["distro_version"] = "latest"
