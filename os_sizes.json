@@ -19,7 +19,7 @@
     "xfce": 4.8
   },
   "fedora_39": {
-    "budgie": 2.6,
+    "budgie": 2.7,
     "cinnamon": 7.1,
     "cli": 2.7,
     "deepin": 5.8,
@@ -30,7 +30,7 @@
   },
   "fedora_average": 2.4,
   "pop-os_22.04": {
-    "cosmic-gnome": 0.0
+    "cosmic-gnome": 8.5
   },
   "ubuntu_22.04": {
     "budgie": 5.7,
