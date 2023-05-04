@@ -1,12 +1,12 @@
 {
   "arch_latest": {
-    "budgie": 4.7,
+    "budgie": 4.8,
     "cinnamon": 2.2,
-    "cli": 3.0,
-    "gnome": 5.4,
+    "cli": 3.1,
+    "gnome": 5.5,
     "kde": 5.2,
     "lxqt": 4.5,
-    "xfce": 4.3
+    "xfce": 4.2
   },
   "fedora_38": {
     "budgie": 2.5,
