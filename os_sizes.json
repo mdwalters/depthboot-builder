@@ -10,8 +10,8 @@
   },
   "fedora_38": {
     "budgie": 2.5,
-    "cinnamon": 7.0,
-    "cli": 2.0,
+    "cinnamon": 7.1,
+    "cli": 2.1,
     "deepin": 5.5,
     "gnome": 6.7,
     "kde": 6.2,
