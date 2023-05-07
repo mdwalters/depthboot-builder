@@ -42,33 +42,6 @@ def exit_handler():
         bash(f"umount -lf {img_mnt}*")  # umount all partitions from usb/sd-card
 
 
-def download_kernel(kernel_type: str, dev_release: bool, download_modules_header: bool) -> None:
-    if dev_release:
-        urls = {
-            "mainline": "https://github.com/eupnea-linux/mainline-kernel/releases/download/dev-build/",
-            "chromeos": "https://github.com/eupnea-linux/chromeos-kernel/releases/download/dev-build/"
-        }
-    else:
-        urls = {
-            "mainline": "https://github.com/eupnea-linux/mainline-kernel/releases/latest/download/",
-            "chromeos": "https://github.com/eupnea-linux/chromeos-kernel/releases/latest/download/"
-        }
-
-    try:
-        print_status(f"Downloading {kernel_type} kernel")
-        download_file(f"{urls[kernel_type]}bzImage", "/tmp/depthboot-build/bzImage")
-        if download_modules_header:
-            print_status(f"Downloading {kernel_type} modules")
-            download_file(f"{urls[kernel_type]}modules.tar.xz", "/tmp/depthboot-build/modules.tar.xz")
-            print_status(f"Downloading {kernel_type} headers")
-            download_file(f"{urls[kernel_type]}headers.tar.xz", "/tmp/depthboot-build/headers.tar.xz")
-    except URLError:
-        print_error("Failed to reach github. Check your internet connection and try again or use local files with -l")
-        if dev_release:
-            print_warning("Dev releases may not always be available")
-        sys.exit(1)
-
-
 # download the distro rootfs
 def download_rootfs(distro_name: str, distro_version: str) -> None:
     try:
@@ -98,7 +71,7 @@ def download_rootfs(distro_name: str, distro_version: str) -> None:
 
 
 # Create, mount, partition the img and flash the eupnea kernel
-def prepare_img(distro_name: str, img_size, verbose_kernel: bool) -> Tuple[str, str]:
+def prepare_img(img_size: int) -> bool:
     print_status("Preparing image")
     try:
         bash(f"fallocate -l {img_size}G depthboot.img")
@@ -106,21 +79,23 @@ def prepare_img(distro_name: str, img_size, verbose_kernel: bool) -> Tuple[str, 
         bash(f"dd if=/dev/zero of=depthboot.img status=progress bs=1024 count={img_size * 1000000}")
 
     print_status("Mounting empty image")
+    global img_mnt
     try:
-        mnt_point = bash("losetup -f --show depthboot.img")
+        img_mnt = bash("losetup -f --show depthboot.img")
     except subprocess.CalledProcessError as e:
         if not bash("systemd-detect-virt").lower().__contains__("wsl"):  # if not running WSL, the error is unexpected
             raise e
         print_error("Losetup failed. Make sure you are using WSL version 2 aka WSL2.")
         sys.exit(1)
-    if mnt_point == "":
+    if img_mnt == "":
         print_error("Failed to mount image")
         sys.exit(1)
-    return partition_and_flash_kernel(mnt_point, False, distro_name, verbose_kernel)
+    partition(False)
+    return False
 
 
 # Prepare USB/SD-card
-def prepare_usb_sd(device: str, distro_name: str, verbose_kernel: bool) -> Tuple[str, str]:
+def prepare_usb_sd(device: str) -> bool:
     print_status("Preparing USB/SD-card")
 
     # fix device name if needed
@@ -130,28 +105,33 @@ def prepare_usb_sd(device: str, distro_name: str, verbose_kernel: bool) -> Tuple
     if not device.startswith("/dev/"):
         device = f"/dev/{device}"
 
+    global img_mnt
+    img_mnt = device
+
     # unmount all partitions
     with contextlib.suppress(subprocess.CalledProcessError):
-        bash(f"umount -lf {device}*")
-    if device.__contains__("mmcblk"):  # sd card
-        return partition_and_flash_kernel(device, False, distro_name, verbose_kernel)
+        bash(f"umount -lf {img_mnt}*")
+
+    if img_mnt.__contains__("mmcblk"):  # sd card
+        partition(write_usb=False)
+        return False
     else:
-        return partition_and_flash_kernel(device, True, distro_name, verbose_kernel)
+        partition(write_usb=True)
+        return True
 
 
-def partition_and_flash_kernel(mnt_point: str, write_usb: bool, distro_name: str, verbose_kernel: bool) -> Tuple[
-    str, str]:
+def partition(write_usb: bool) -> None:
     print_status("Preparing device/image partition")
 
     # Determine rootfs part name
-    rootfs_mnt = f"{mnt_point}3" if write_usb else f"{mnt_point}p3"
+    rootfs_mnt = f"{img_mnt}3" if write_usb else f"{img_mnt}p3"
     # remove pre-existing partition table from storage device
-    bash(f"wipefs -af {mnt_point}")
+    bash(f"wipefs -af {img_mnt}")
 
     # format as per depthcharge requirements,
     # READ: https://wiki.gentoo.org/wiki/Creating_bootable_media_for_depthcharge_based_devices
     try:
-        bash(f"parted -s {mnt_point} mklabel gpt")
+        bash(f"parted -s {img_mnt} mklabel gpt")
     # TODO: Only show this prompt when parted throws: "we have been unable to inform the kernel of the change"
     # TODO: Check if partprob-ing the drive could fix this error
     except subprocess.CalledProcessError:
@@ -159,44 +139,13 @@ def partition_and_flash_kernel(mnt_point: str, write_usb: bool, distro_name: str
         print_question("If you chose the image option or are seeing this message the second time, create an issue on "
                        "GitHub/Discord/Revolt")
         sys.exit(1)
-    bash(f"parted -s -a optimal {mnt_point} unit mib mkpart Kernel 1 65")  # kernel partition
-    bash(f"parted -s -a optimal {mnt_point} unit mib mkpart Kernel 65 129")  # reserve kernel partition
-    bash(f"parted -s -a optimal {mnt_point} unit mib mkpart Root 129 100%")  # rootfs partition
-    bash(f"cgpt add -i 1 -t kernel -S 1 -T 5 -P 15 {mnt_point}")  # set kernel flags
-    bash(f"cgpt add -i 2 -t kernel -S 1 -T 5 -P 1 {mnt_point}")  # set backup kernel flags
+    bash(f"parted -s -a optimal {img_mnt} unit mib mkpart Kernel 1 65")  # kernel partition
+    bash(f"parted -s -a optimal {img_mnt} unit mib mkpart Kernel 65 129")  # reserve kernel partition
+    bash(f"parted -s -a optimal {img_mnt} unit mib mkpart Root 129 100%")  # rootfs partition
+    bash(f"cgpt add -i 1 -t kernel -S 1 -T 5 -P 15 {img_mnt}")  # set kernel flags
+    bash(f"cgpt add -i 2 -t kernel -S 1 -T 5 -P 1 {img_mnt}")  # set backup kernel flags
 
-    # get uuid of rootfs partition
-    rootfs_partuuid = bash(f"blkid -o value -s PARTUUID {rootfs_mnt}")
-    print_status(f"Rootfs partition UUID: {rootfs_partuuid}")
-
-    # write PARTUUID to kernel flags and save it as a file
-    base_string = "console= root=PARTUUID=insert_partuuid i915.modeset=1 rootwait rw fbcon=logo-pos:center,logo-count:1"
-    if distro_name in {"pop-os", "ubuntu"}:
-        base_string += ' security=apparmor'
-    if distro_name == 'fedora':
-        base_string += ' security=selinux'
-    if verbose_kernel:
-        base_string = base_string.replace("console=", "loglevel=15")
-    with open("kernel.flags", "w") as config:
-        config.write(base_string.replace("insert_partuuid", rootfs_partuuid))
-
-    print_status("Flashing kernel to device/image")
-    # Sign kernel
-    bash("futility vbutil_kernel --arch x86_64 --version 1 --keyblock /usr/share/vboot/devkeys/kernel.keyblock"
-         + " --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --bootloader kernel.flags" +
-         " --config kernel.flags --vmlinuz /tmp/depthboot-build/bzImage --pack /tmp/depthboot-build/bzImage.signed")
-
-    # Flash kernel
-    if write_usb:
-        # if writing to usb, then no p in partition name
-        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={mnt_point}1")
-        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={mnt_point}2")  # Backup kernel
-    else:
-        # image is a loop device -> needs p in part name
-        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={mnt_point}p1")
-        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={mnt_point}p2")  # Backup kernel
-
-    print_status("Formatting rootfs part")
+    print_status("Formatting rootfs partition")
     # Create rootfs ext4 partition
     bash(f"yes 2>/dev/null | mkfs.ext4 {rootfs_mnt}")  # 2>/dev/null is to supress yes broken pipe warning
 
@@ -204,7 +153,6 @@ def partition_and_flash_kernel(mnt_point: str, write_usb: bool, distro_name: str
     bash(f"mount {rootfs_mnt} /mnt/depthboot")
 
     print_status("Device/image preparation complete")
-    return mnt_point, rootfs_partuuid  # return loop device, so it can be unmounted at the end
 
 
 # extract the rootfs to /mnt/depthboot
@@ -409,19 +357,57 @@ def post_extract(build_options) -> None:
 
 
 # post extract and distro config
-def post_config(de_name: str, distro_name) -> None:
+def post_config(distro_name: str, verbose_kernel: bool, kernel_type: str, is_usb,
+                local_path: str) -> None:
     if distro_name != "generic":
         # Enable postinstall service
         print_status("Enabling postinstall service")
         chroot("systemctl enable eupnea-postinstall.service")
 
-    # if local path option was used, we need to extract modules and headers to the rootfs
-    if path_exists("/tmp/depthboot-build/modules.tar.xz"):
-        print_status("Extracting kernel modules from local path")
-        extract_file("/tmp/depthboot-build/modules.tar.xz", "/mnt/depthboot/lib/modules/")
-    if path_exists("/tmp/depthboot-build/headers.tar.xz"):
-        print_status("Extracting kernel headers from local path")
-        extract_file("/tmp/depthboot-build/headers.tar.xz", "/mnt/depthboot/usr/src/")
+    # if local path option was used, extract modules and headers to the rootfs
+    # check if at least kernel image and modules exist as otherwise the kernel won't boot
+    if path_exists(f"{local_path}modules.tar.xz") and path_exists(f"{local_path}bzImage"):
+        print_status("Extracting kernel modules from local path to rootfs")
+        extract_file(f"{local_path}modules.tar.xz", "/mnt/depthboot/lib/modules/")
+        kernel_path = f"{local_path}bzImage"  # set kernel path to local path
+        if path_exists(f"{local_path}headers.tar.xz"):  # kernel headers are not required to boot
+            print_status("Extracting kernel headers from local path")
+            extract_file(f"{local_path}headers.tar.xz", "/mnt/depthboot/usr/src/")
+    else:
+        kernel_path = f"/mnt/depthboot/boot/vmlinuz-eupnea-{kernel_type}"
+
+    # flash kernel
+    # get uuid of rootfs partition
+    rootfs_mnt = f"{img_mnt}3" if is_usb else f"{img_mnt}p3"
+    rootfs_partuuid = bash(f"blkid -o value -s PARTUUID {rootfs_mnt}")
+    print_status(f"Rootfs partition UUID: {rootfs_partuuid}")
+
+    # write PARTUUID to kernel flags and save it as a file
+    base_string = "console= root=PARTUUID=insert_partuuid i915.modeset=1 rootwait rw fbcon=logo-pos:center,logo-count:1"
+    if distro_name in {"pop-os", "ubuntu"}:
+        base_string += ' security=apparmor'
+    if distro_name == 'fedora':
+        base_string += ' security=selinux'
+    if verbose_kernel:
+        base_string = base_string.replace("console=", "loglevel=15")
+    with open("kernel.flags", "w") as config:
+        config.write(base_string.replace("insert_partuuid", rootfs_partuuid))
+
+    print_status("Flashing kernel to device/image")
+    # Sign kernel
+    bash("futility vbutil_kernel --arch x86_64 --version 1 --keyblock /usr/share/vboot/devkeys/kernel.keyblock "
+         "--signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk --bootloader kernel.flags "
+         f"--config kernel.flags --vmlinuz {kernel_path} --pack /tmp/depthboot-build/bzImage.signed")
+
+    # Flash kernel
+    if is_usb:
+        # if writing to usb, then no p in partition name
+        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={img_mnt}1")
+        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={img_mnt}2")  # Backup kernel
+    else:
+        # image is a loop device -> needs p in part name
+        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={img_mnt}p1")
+        bash(f"dd if=/tmp/depthboot-build/bzImage.signed of={img_mnt}p2")  # Backup kernel
 
     # Fedora requires all files to be relabled for SELinux to work
     # If this is not done, SELinux will prevent users from logging in
@@ -478,22 +464,13 @@ def start_build(build_options: dict, args: argparse.Namespace) -> None:
     mkdir("/tmp/depthboot-build", create_parents=True)
     mkdir("/mnt/depthboot", create_parents=True)
 
+    local_path_posix = ""
     if args.local_path is None:  # default
-        download_kernel(build_options["kernel_type"], args.dev_build, build_options["distro_name"] == "generic")
         download_rootfs(build_options["distro_name"], build_options["distro_version"])
     else:  # if local path is specified, copy files from it, instead of downloading from the internet
         print_status("Copying local files to /tmp/depthboot-build")
         # clean local path string
         local_path_posix = args.local_path if args.local_path.endswith("/") else f"{args.local_path}/"
-        # copy kernel files
-        kernel_files = ["bzImage", "modules.tar.xz", "headers.tar.xz", ]
-        for file in kernel_files:
-            try:
-                cpfile(f"{local_path_posix}{file}", f"/tmp/depthboot-build/{file}")
-            except FileNotFoundError:
-                print_error(f"File {file} not found in {args.local_path}, downloading kernel files as usual")
-                download_kernel(build_options["kernel_type"], args.dev_build, build_options["distro_name"] == "generic")
-                break
 
         # copy distro rootfs
         try:
@@ -505,11 +482,9 @@ def start_build(build_options: dict, args: argparse.Namespace) -> None:
 
     # Setup device
     if build_options["device"] == "image":
-        output_temp = prepare_img(build_options["distro_name"], args.image_size[0], args.verbose_kernel)
+        is_usb = prepare_img(args.image_size[0])
     else:
-        output_temp = prepare_usb_sd(build_options["device"], build_options["distro_name"], args.verbose_kernel)
-    global img_mnt
-    img_mnt = output_temp[0]
+        is_usb = prepare_usb_sd(build_options["device"])
     # Extract rootfs and configure distro agnostic settings
     extract_rootfs(build_options["distro_name"], build_options["distro_version"])
     post_extract(build_options)
@@ -526,9 +501,11 @@ def start_build(build_options: dict, args: argparse.Namespace) -> None:
         case _:
             print_status("Generic install, skipping distro specific configuration")
     with contextlib.suppress(UnboundLocalError):
-        distro.config(build_options["de_name"], build_options["distro_version"], args.verbose, build_options["kernel_type"])
+        distro.config(build_options["de_name"], build_options["distro_version"], args.verbose,
+                      build_options["kernel_type"])
 
-    post_config(build_options["de_name"], build_options["distro_name"])
+    post_config(build_options["distro_name"], args.verbose_kernel, build_options["kernel_type"], is_usb,
+                local_path_posix)
 
     print_status("Unmounting image/device")
 
