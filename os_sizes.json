@@ -33,24 +33,24 @@
     "cosmic-gnome": 8.2
   },
   "ubuntu_22.04": {
-    "budgie": 5.6,
+    "budgie": 5.7,
     "cinnamon": 7.0,
-    "cli": 3.8,
-    "deepin": 7.6,
-    "gnome": 5.5,
-    "kde": 5.5,
-    "lxqt": 4.6,
+    "cli": 3.7,
+    "deepin": 7.7,
+    "gnome": 5.4,
+    "kde": 5.6,
+    "lxqt": 4.7,
     "xfce": 5.1
   },
   "ubuntu_23.04": {
-    "budgie": 5.7,
-    "cinnamon": 7.1,
+    "budgie": 5.6,
+    "cinnamon": 7.0,
     "cli": 3.8,
     "deepin": 2.8,
-    "gnome": 6.0,
-    "kde": 5.6,
+    "gnome": 5.9,
+    "kde": 5.5,
     "lxqt": 6.6,
-    "xfce": 5.6
+    "xfce": 5.5
   },
   "ubuntu_average": 3.8
 }
