@@ -25,6 +25,8 @@ def process_args():
                         help="Show device selection menu instead of automatically building image")
     parser.add_argument("-v", "--verbose", dest="verbose", help="Print more output", action="store_true")
     parser.add_argument("--no-shrink", dest="no_shrink", help="Do not shrink image", action="store_true")
+    parser.add_argument("--no-deps-check", dest="no_deps_check", help="Do not check if dependencies are installed",
+                        action="store_true")
     parser.add_argument("--verbose-kernel", dest="verbose_kernel", action="store_true",
                         help="Set loglevel=15 in cmdline for visible kernel logs on boot")
     parser.add_argument("--skip-size-check", dest="skip_size_check", action="store_true",
@@ -97,42 +99,46 @@ if __name__ == "__main__":
         os.environ["PATH"] += ":/usr/sbin"
 
     # check script dependencies are already installed with which
-    try:
-        bash("which pv xz parted cgpt futility")
-        print_status("Dependencies already installed, skipping")
-    except subprocess.CalledProcessError:
-        print_status("Installing dependencies")
-        with open("/etc/os-release", "r") as os:
-            distro = os.read()
-        if distro.lower().__contains__(
-                "arch"):  # might accidentally catch architecture stuff, but needed to catch arch derivatives
-            bash("pacman -Sy")  # sync repos
-            # Download prepackaged cgpt + vboot from arch-repo releases as its not available in the official repos
-            # Makepkg is too much of a hassle to use here as it requires a non-root user
-            urlretrieve("https://github.com/eupnea-linux/arch-repo/releases/latest/download/cgpt-vboot"
-                        "-utils.pkg.tar.gz", filename="/tmp/cgpt-vboot-utils.pkg.tar.gz")
-            # Install downloaded package
-            bash("pacman --noconfirm -U /tmp/cgpt-vboot-utils.pkg.tar.gz")
-            # Install other dependencies
-            bash("pacman --noconfirm -S pv xz parted")
-        elif distro.lower().__contains__("void"):
-            bash("xbps-install -y --sync")
-            bash("xbps-install -y pv xz parted cgpt vboot-utils")
-        elif distro.lower().__contains__("ubuntu") or distro.lower().__contains__("debian"):
-            bash("apt-get update -y")  # sync repos
-            bash("apt-get install -y pv xz-utils parted cgpt vboot-kernel-utils")
-        elif distro.lower().__contains__("suse"):
-            bash("zypper --non-interactive refresh")  # sync repos
-            bash("zypper --non-interactive install vboot parted pv xz")  # cgpt is included in vboot-utils on fedora
-        elif distro.lower().__contains__("fedora"):
-            bash("dnf update -y")  # sync repos
-            bash("dnf install -y vboot-utils parted pv xz")  # cgpt is included in vboot-utils on fedora
-        else:
-            print_warning("Script dependencies not found, please install the following packages with your package "
-                          "manager: which pv xz parted cgpt futility")
-            sys.exit(1)
+    if not args.no_deps_check:
+        try:
+            bash("which pv xz parted cgpt futility")
+            print_status("Dependencies already installed, skipping")
+        except subprocess.CalledProcessError:
+            print_status("Installing dependencies")
+            with open("/etc/os-release", "r") as os:
+                distro = os.read()
+            if distro.lower().__contains__(
+                    "arch"):  # might accidentally catch architecture stuff, but needed to catch arch derivatives
+                bash("pacman -Sy")  # sync repos
+                # Download prepackaged cgpt + vboot from arch-repo releases as its not available in the official repos
+                # Makepkg is too much of a hassle to use here as it requires a non-root user
+                urlretrieve("https://github.com/eupnea-linux/arch-repo/releases/latest/download/cgpt-vboot"
+                            "-utils.pkg.tar.gz", filename="/tmp/cgpt-vboot-utils.pkg.tar.gz")
+                # Install downloaded package
+                bash("pacman --noconfirm -U /tmp/cgpt-vboot-utils.pkg.tar.gz")
+                # Install other dependencies
+                bash("pacman --noconfirm -S pv xz parted")
+            elif distro.lower().__contains__("void"):
+                bash("xbps-install -y --sync")
+                bash("xbps-install -y pv xz parted cgpt vboot-utils")
+            elif distro.lower().__contains__("ubuntu") or distro.lower().__contains__("debian"):
+                bash("apt-get update -y")  # sync repos
+                bash("apt-get install -y pv xz-utils parted cgpt vboot-kernel-utils")
+            elif distro.lower().__contains__("suse"):
+                bash("zypper --non-interactive refresh")  # sync repos
+                bash("zypper --non-interactive install vboot parted pv xz")  # cgpt is included in vboot-utils on fedora
+            elif distro.lower().__contains__("fedora"):
+                bash("dnf update -y")  # sync repos
+                bash("dnf install -y vboot-utils parted pv xz")  # cgpt is included in vboot-utils on fedora
+            else:
+                print_warning("Script dependencies not found, please install the following packages with your package "
+                              "manager: which pv xz parted cgpt futility")
+                sys.exit(1)
+    else:
+        print_warning("Skipping dependency check")
 
     # Check python version
+    print_status("Checking python version")
     if sys.version_info < (3, 10):  # python 3.10 or higher is required
         # Check if running under crostini and ask user to update python
         # Do not give this option on regular systems, as it may break the system
@@ -176,6 +182,7 @@ if __name__ == "__main__":
     import cli_input
 
     # check if running the latest version fo the script
+    print_status("Checking if local script is up to date")
     try:
         if not args.skip_commit_check and \
                 bash("git rev-parse HEAD") != bash("git ls-remote origin HEAD").split("\t")[0]:
