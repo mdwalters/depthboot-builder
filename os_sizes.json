@@ -13,7 +13,7 @@
     "cinnamon": 7.1,
     "cli": 2.1,
     "deepin": 5.5,
-    "gnome": 6.7,
+    "gnome": 6.8,
     "kde": 6.2,
     "lxqt": 5.5,
     "xfce": 4.8
@@ -36,10 +36,10 @@
     "budgie": 5.7,
     "cinnamon": 7.0,
     "cli": 3.7,
-    "deepin": 7.7,
+    "deepin": 7.6,
     "gnome": 5.4,
     "kde": 5.6,
-    "lxqt": 4.7,
+    "lxqt": 4.6,
     "xfce": 5.1
   },
   "ubuntu_23.04": {
