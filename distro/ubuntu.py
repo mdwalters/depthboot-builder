@@ -42,10 +42,7 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
            "eupnea-system")
 
     # Install kernel
-    if kernel_version == "mainline":
-        chroot("apt-get install -y eupnea-mainline-kernel")
-    elif kernel_version == "chromeos":
-        chroot("apt-get install -y eupnea-chromeos-kernel")
+    chroot(f"pacman -S --noconfirm eupnea-{kernel_version}-kernel")
 
     print_status("Installing zram, ignore dpkg errors")
     # Install zram

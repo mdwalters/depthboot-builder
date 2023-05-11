@@ -42,10 +42,7 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
     # install eupnea packages after installing python3
     chroot("pacman -S --noconfirm eupnea-utils eupnea-system")
     # Install kernel
-    if kernel_version == "mainline":
-        chroot("pacman -S --noconfirm eupnea-mainline-kernel")
-    elif kernel_version == "chromeos":
-        chroot("pacman -S --noconfirm eupnea-chromeos-kernel")
+    chroot(f"pacman -S --noconfirm eupnea-{kernel_version}-kernel")
 
     print_status("Downloading and installing de, might take a while")
     match de_name:

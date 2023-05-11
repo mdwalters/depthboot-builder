@@ -33,10 +33,7 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
     chroot("apt-get install -y eupnea-utils eupnea-system keyd")
 
     # Install kernel
-    if kernel_version == "mainline":
-        chroot("apt-get install -y eupnea-mainline-kernel")
-    elif kernel_version == "chromeos":
-        chroot("apt-get install -y eupnea-chromeos-kernel")
+    chroot(f"pacman -S --noconfirm eupnea-{kernel_version}-kernel")
 
     # Replace input-synaptics with newer input-libinput, for better touchpad support
     print_status("Upgrading touchpad drivers")

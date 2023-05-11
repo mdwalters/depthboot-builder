@@ -21,10 +21,7 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
     # Install eupnea packages
     chroot("dnf install -y eupnea-system eupnea-utils")
     # Install kernel
-    if kernel_version == "mainline":
-        chroot("dnf install -y eupnea-mainline-kernel")
-    elif kernel_version == "chromeos":
-        chroot("dnf install -y eupnea-chromeos-kernel")
+    chroot(f"pacman -S --noconfirm eupnea-{kernel_version}-kernel")
     # Install core packages
     chroot("dnf group install -y 'Core'")
     # Install firmware packages
