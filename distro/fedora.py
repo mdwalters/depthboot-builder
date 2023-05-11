@@ -21,7 +21,7 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
     # Install eupnea packages
     chroot("dnf install -y eupnea-system eupnea-utils")
     # Install kernel
-    chroot(f"pacman -S --noconfirm eupnea-{kernel_version}-kernel")
+    chroot(f"dnf install -y eupnea-{kernel_version}-kernel")
     # Install core packages
     chroot("dnf group install -y 'Core'")
     # Install firmware packages

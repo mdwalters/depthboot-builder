@@ -42,7 +42,7 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
            "eupnea-system")
 
     # Install kernel
-    chroot(f"pacman -S --noconfirm eupnea-{kernel_version}-kernel")
+    chroot(f"apt-get install -y eupnea-{kernel_version}-kernel")
 
     print_status("Installing zram, ignore dpkg errors")
     # Install zram
