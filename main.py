@@ -257,6 +257,7 @@ if __name__ == "__main__":
 
     # Check if there is enough space in /tmp
     avail_space = int(bash("BLOCK_SIZE=m df --output=avail /tmp").split("\n")[1][:-1])  # read tmp size in MB
+    # TODO: Check if there is enough space on the device to build the image
     restore_tmp = False
 
     if user_input["device"] == "image" and avail_space < 13000 and not args.skip_size_check:
