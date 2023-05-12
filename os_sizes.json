@@ -26,7 +26,7 @@
     "gnome": 6.8,
     "kde": 5.9,
     "lxqt": 5.3,
-    "xfce": 4.8
+    "xfce": -1.4
   },
   "fedora_average": 2.4,
   "pop-os_22.04": {
@@ -46,7 +46,7 @@
     "budgie": 5.6,
     "cinnamon": 7.0,
     "cli": 3.8,
-    "deepin": 2.8,
+    "deepin": 7.0,
     "gnome": 5.9,
     "kde": 5.5,
     "lxqt": 6.6,
