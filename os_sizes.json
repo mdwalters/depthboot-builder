@@ -26,11 +26,11 @@
     "gnome": 6.8,
     "kde": 5.9,
     "lxqt": 5.3,
-    "xfce": -1.4
+    "xfce": 4.8
   },
   "fedora_average": 2.4,
   "pop-os_22.04": {
-    "cosmic-gnome": 8.5
+    "cosmic-gnome": 8.1
   },
   "ubuntu_22.04": {
     "budgie": 5.7,
