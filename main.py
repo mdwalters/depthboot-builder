@@ -146,7 +146,7 @@ if __name__ == "__main__":
             with open("/sys/devices/virtual/dmi/id/product_name", "r") as file:
                 product_name = file.read().strip()
         except FileNotFoundError:
-            product_name = ""
+            product_name = ""  # wsl doesn't have dmi info
         if product_name == "crosvm" and path_exists("/usr/bin/apt"):
             user_answer = input("\033[92m" + "Python 3.10 or higher is required. Attempt to install? (Y/n)\n" +
                                 "\033[0m").lower()

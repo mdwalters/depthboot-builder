@@ -170,7 +170,7 @@ def extract_rootfs(distro_name: str, distro_version: str) -> None:
         case "generic":
             def prompt_user_for_rootfs():
                 while True:
-                    # user read for path autocompletion
+                    # use read for path autocompletion
                     user_rootfs_path = input("\033[92m" + "Please manually extract the rootfs and provide the path "
                                                           "to the root directory:\n" + "\033[0m")
                     if user_rootfs_path.endswith("/"):
