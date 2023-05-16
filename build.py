@@ -194,6 +194,15 @@ def extract_rootfs(distro_name: str, distro_version: str) -> None:
                                 " without any shortcuts (i.e. ~ for home, etc)")
                     continue
                 break
+            # Check if running under crostini
+            try:
+                with open("/sys/devices/virtual/dmi/id/product_name", "r") as file:
+                    product_name = file.read().strip()
+            except FileNotFoundError:
+                product_name = ""  # wsl doesn't have dmi info
+            if product_name == "crosvm":
+                print_error("Crostini doesn't support mounting iso files.")
+                prompt_user_for_rootfs()
             # mount iso
             print_status("Mounting iso")
             iso_loop_dev = bash(f"losetup -fP --show {iso_path}")
