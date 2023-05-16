@@ -178,7 +178,7 @@ def extract_rootfs(distro_name: str, distro_version: str) -> None:
                     # we could check for more dirs but this should be enough
                     if not path_exists(f"{user_rootfs_path}/usr") or not path_exists(f"{user_rootfs_path}/bin"):
                         print_error("Path does not contain a rootfs. Verify that you are entering the full path, "
-                                    "without any shortcuts (i.e. ~ for home, etc)")
+                                    "without any shortcuts (i.e. ~ for home, ./ for current dir, etc...)")
                         continue
                     return user_rootfs_path
 
