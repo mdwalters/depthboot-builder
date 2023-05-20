@@ -9,14 +9,14 @@
     "xfce": 4.2
   },
   "fedora_38": {
-    "budgie": 2.5,
+    "budgie": 2.4,
     "cinnamon": 7.1,
-    "cli": 2.1,
+    "cli": 2.2,
     "deepin": 5.5,
-    "gnome": 6.8,
-    "kde": 6.2,
-    "lxqt": 5.5,
-    "xfce": 4.8
+    "gnome": 6.7,
+    "kde": 6.1,
+    "lxqt": 5.4,
+    "xfce": 4.7
   },
   "fedora_39": {
     "budgie": 2.9,
@@ -28,9 +28,9 @@
     "lxqt": 5.3,
     "xfce": 4.8
   },
-  "fedora_average": 2.4,
+  "fedora_average": 2.5,
   "pop-os_22.04": {
-    "cosmic-gnome": 8.1
+    "cosmic-gnome": 8.2
   },
   "ubuntu_22.04": {
     "budgie": 5.7,
@@ -46,7 +46,7 @@
     "budgie": 5.6,
     "cinnamon": 7.0,
     "cli": 3.8,
-    "deepin": 7.1,
+    "deepin": 7.0,
     "gnome": 5.9,
     "kde": 5.5,
     "lxqt": 6.6,
