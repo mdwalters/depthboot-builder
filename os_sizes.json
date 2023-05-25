@@ -1,7 +1,7 @@
 {
   "arch_latest": {
     "budgie": 3.0,
-    "cinnamon": 2.2,
+    "cinnamon": 2.3,
     "cli": 3.1,
     "gnome": 5.5,
     "kde": 5.2,
@@ -30,7 +30,7 @@
   },
   "fedora_average": 2.5,
   "pop-os_22.04": {
-    "cosmic-gnome": 8.2
+    "cosmic-gnome": 8.1
   },
   "ubuntu_22.04": {
     "budgie": 5.7,
