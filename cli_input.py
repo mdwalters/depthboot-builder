@@ -191,7 +191,7 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
                 continue
 
     while True:
-        kernel_type = ia_selection("Which kernel type would you like to use? Usually there is no need to change this",
+        kernel_type = ia_selection("Which kernel type would you like to use? Usually there is no need to change this. \nYou can change kernels in the future by using your package manager (eupnea-kernelname-kernel).",
                                    options=["ChromeOS", "Mainline"],
                                    flags=["(default, recommended for older devices)", "(newer kernel, recommended)"])
 
