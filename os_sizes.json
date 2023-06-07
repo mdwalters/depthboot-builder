@@ -13,14 +13,14 @@
     "cinnamon": 7.1,
     "cli": 2.2,
     "deepin": 5.6,
-    "gnome": -1.1,
+    "gnome": 6.7,
     "kde": 6.1,
     "lxqt": 5.4,
     "xfce": 4.7
   },
   "fedora_39": {
     "budgie": 2.9,
-    "cinnamon": 7.1,
+    "cinnamon": 5.2,
     "cli": 2.7,
     "deepin": 5.8,
     "gnome": 6.8,
@@ -30,7 +30,7 @@
   },
   "fedora_average": 2.5,
   "pop-os_22.04": {
-    "cosmic-gnome": 8.1
+    "cosmic-gnome": 8.5
   },
   "ubuntu_22.04": {
     "budgie": 5.7,
