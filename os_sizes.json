@@ -14,7 +14,7 @@
     "cli": 2.2,
     "deepin": 5.6,
     "gnome": 6.7,
-    "kde": 6.1,
+    "kde": 6.2,
     "lxqt": 5.4,
     "xfce": 4.8
   },
@@ -46,7 +46,7 @@
     "budgie": 5.6,
     "cinnamon": 7.1,
     "cli": 3.8,
-    "deepin": 7.6,
+    "deepin": 7.5,
     "gnome": 5.9,
     "kde": 5.6,
     "lxqt": 6.6,
