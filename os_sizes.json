@@ -30,7 +30,7 @@
   },
   "fedora_average": 2.5,
   "pop-os_22.04": {
-    "cosmic-gnome": 8.6
+    "cosmic-gnome": 8.1
   },
   "ubuntu_22.04": {
     "budgie": 5.7,
@@ -47,7 +47,7 @@
     "cinnamon": 7.1,
     "cli": 3.8,
     "deepin": 7.5,
-    "gnome": 5.9,
+    "gnome": 6.0,
     "kde": 5.6,
     "lxqt": 6.6,
     "xfce": 5.6
