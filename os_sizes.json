@@ -25,7 +25,7 @@
     "deepin": 5.8,
     "gnome": 6.8,
     "kde": 6.1,
-    "lxqt": 5.3,
+    "lxqt": -1.4,
     "xfce": 4.8
   },
   "fedora_average": 2.5,
