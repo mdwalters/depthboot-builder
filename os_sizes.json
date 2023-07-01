@@ -1,11 +1,11 @@
 {
   "arch_latest": {
-    "budgie": 2.9,
+    "budgie": 3.0,
     "cinnamon": 2.5,
     "cli": 3.1,
     "gnome": 5.5,
     "kde": 5.2,
-    "lxqt": 4.5,
+    "lxqt": 4.7,
     "xfce": 4.2
   },
   "fedora_38": {
@@ -43,7 +43,7 @@
     "xfce": 5.1
   },
   "ubuntu_23.04": {
-    "budgie": 5.6,
+    "budgie": 5.7,
     "cinnamon": 7.1,
     "cli": 3.8,
     "deepin": 7.4,
