@@ -4,12 +4,12 @@
     "cinnamon": 2.3,
     "cli": 3.1,
     "gnome": 5.5,
-    "kde": -1.6,
-    "lxqt": -1.6,
+    "kde": 5.2,
+    "lxqt": 4.5,
     "xfce": 4.2
   },
   "fedora_38": {
-    "budgie": 2.4,
+    "budgie": 2.6,
     "cinnamon": 5.2,
     "cli": 2.2,
     "deepin": 5.6,
