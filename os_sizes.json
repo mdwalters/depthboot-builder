@@ -5,7 +5,7 @@
     "cli": 3.1,
     "gnome": 5.5,
     "kde": 5.2,
-    "lxqt": 4.5,
+    "lxqt": 4.7,
     "xfce": 4.2
   },
   "fedora_38": {
@@ -43,14 +43,14 @@
     "xfce": 5.1
   },
   "ubuntu_23.04": {
-    "budgie": 0.0,
-    "cinnamon": 0.0,
-    "cli": 0.0,
-    "deepin": 0.0,
-    "gnome": 0.0,
-    "kde": 0.0,
-    "lxqt": 0.0,
-    "xfce": 0.0
+    "budgie": 5.7,
+    "cinnamon": 7.1,
+    "cli": 3.8,
+    "deepin": 7.4,
+    "gnome": 6.0,
+    "kde": 5.6,
+    "lxqt": 6.6,
+    "xfce": 5.6
   },
-  "ubuntu_average": 1.9
+  "ubuntu_average": 3.8
 }
