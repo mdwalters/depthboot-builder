@@ -320,6 +320,7 @@ def post_extract(build_options) -> None:
         settings["distro_name"] = build_options["distro_name"]
         settings["distro_version"] = build_options["distro_version"]
         settings["de_name"] = build_options["de_name"]
+        settings["shell"] = build_options["shell"]
         if build_options["device"] != "image":
             settings["install_type"] = "direct"
         with open("/mnt/depthboot/etc/eupnea.json", "w") as settings_file:
@@ -341,7 +342,7 @@ def post_extract(build_options) -> None:
 
     print_status("Configuring user")
     username = build_options["username"]  # quotes interfere with functions below
-    chroot(f"useradd --create-home --shell /bin/bash {username}")
+    chroot(f"useradd --create-home --shell /bin/{build_options['shell']} {username}")
     password = build_options["password"]  # quotes interfere with functions below
     chroot(f"echo '{username}:{password}' | chpasswd")
     with open("/mnt/depthboot/etc/group", "r") as group_file:
@@ -511,7 +512,7 @@ def start_build(build_options: dict, args: argparse.Namespace) -> None:
             print_status("Generic install, skipping distro specific configuration")
     with contextlib.suppress(UnboundLocalError):
         distro.config(build_options["de_name"], build_options["distro_version"], args.verbose,
-                      build_options["kernel_type"])
+                      build_options["kernel_type"], build_options["shell"])
 
     post_config(build_options["distro_name"], args.verbose_kernel, build_options["kernel_type"], is_usb,
                 local_path_posix)

@@ -4,7 +4,7 @@ import os
 from functions import *
 
 
-def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str) -> None:
+def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str, shell: str) -> None:
     set_verbose(verbose)
     print_status("Configuring Ubuntu")
 
@@ -105,6 +105,16 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
         case _:
             print_error("Invalid desktop environment! Please create an issue")
             exit(1)
+
+    match shell:
+        case "bash":
+            pass # bash is preinstalled, no need to install anything
+        case "fish":
+            print_status("Installing fish")
+            chroot("apt-get install -y fish")
+        case "fish":
+            print_status("Installing zsh")
+            chroot("apt-get install -y zsh")        
 
     if de_name != "cli":
         # Replace input-synaptics with newer input-libinput, for better touchpad support

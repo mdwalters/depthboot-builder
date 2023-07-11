@@ -2,7 +2,7 @@ from functions import *
 from urllib.request import urlretrieve
 
 
-def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str) -> None:
+def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str, shell: str) -> None:
     set_verbose(verbose)
     print_status("Configuring Pop!_OS")
 
@@ -47,5 +47,15 @@ def config(de_name: str, distro_version: str, verbose: bool, kernel_version: str
     with open("/mnt/depthboot/etc/gdm3/custom.conf", "w") as file:
         file.write(gdm_config.replace("WaylandEnable=false", "#WaylandEnable=false"))
     # TODO: Set wayland as default
+
+    match shell:
+        case "bash":
+            pass # bash is preinstalled, no need to install anything
+        case "fish":
+            print_status("Installing fish")
+            chroot("apt-get install -y fish")
+        case "fish":
+            print_status("Installing zsh")
+            chroot("apt-get install -y zsh")
 
     print_status("Pop!_OS setup complete")

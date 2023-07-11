@@ -14,6 +14,7 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
         "distro_name": "",
         "distro_version": "",
         "de_name": "",
+        "shell": "",
         "username": "",
         "password": "",
         "device": "image",
@@ -155,6 +156,14 @@ def get_user_input(verbose_kernel: bool, skip_device: bool = False) -> dict:
         print(f"{desktop_env} selected")
     elif output_dict["distro_name"] == "pop-os":
         output_dict["de_name"] = "cosmic-gnome"
+
+    shell_list = ["bash", "fish", "zsh"]
+    shell_flags_list = ["(recommended)", "", ""]
+    while True:
+        output_dict["shell"] = ia_selection("Which shell would you like to use?",
+                                            options=shell_list,
+                                            flags=shell_flags_list)
+        break
 
     print_question("Enter a username for the new user")
     while True:
